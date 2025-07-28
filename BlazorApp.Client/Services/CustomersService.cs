@@ -23,19 +23,19 @@ public class CustomersService : IRepository
 	}
 	public async Task<HttpResponseMessage> NewCustomer(Customer customer)
 	{
-		var request = await httpClient.PutAsJsonAsync("api/Customers/NewCustomer", customer);
+		var request = await httpClient.PostAsJsonAsync("api/Customers/NewCustomer", customer);
 		return request;
 	}
 
 	public async Task<HttpResponseMessage> UpdateCustomer(Customer customer)
 	{
-		var request = await httpClient.PostAsJsonAsync("api/Customers/UpdateCustomer", customer);
+		var request = await httpClient.PutAsJsonAsync("api/Customers/UpdateCustomer", customer);
 		return request;
 	}
 
 	public async Task<Customer?> GetCustomerById(string id)
 	{
-		var request = await httpClient.GetAsync("api/Customers/GetCustomerById/{id}");
+		var request = await httpClient.GetAsync($"api/Customers/GetCustomerById/{id}");
 		var response = await request.Content.ReadFromJsonAsync<Customer>();
 		return response;
 	}
@@ -49,7 +49,7 @@ public class CustomersService : IRepository
 
 	public async Task<HttpResponseMessage> DeleteCustomer(string id)
 	{
-		var request = await httpClient.DeleteAsync("api/Customers/DeleteCustomer/{id}");
+		var request = await httpClient.DeleteAsync($"api/Customers/DeleteCustomer/{id}");
 		return request;
 	}
 }

@@ -29,11 +29,11 @@ public class CustomersController : ControllerBase
 	[HttpGet("GetCustomerById/{id}")]
 	public async Task<ActionResult<Customer>> GetCustomerById(string id)
 	{
-		var customer = await appDbContext.Customers.FindAsync(id);
+		var customer = await appDbContext.Customers.FirstOrDefaultAsync(x => (x.Id.ToString() == id));
 		return Ok(customer);
 	}
 
-	[HttpPut("NewCustomer")]
+	[HttpPost("NewCustomer")]
 	public async Task<ActionResult> InsertCustomer(Customer customer)
 	{
 		if (ModelState.IsValid)
@@ -70,7 +70,7 @@ public class CustomersController : ControllerBase
 		return BadRequest("Requested Customer not found.");
 	}
 
-	[HttpPost("UpdateCustomer")]
+	[HttpPut("UpdateCustomer")]
 	public async Task<ActionResult> UpdateCustomer(Customer customer)
 	{
 		if (ModelState.IsValid)

@@ -1,0 +1,131 @@
+﻿@page "/managecustomer"
+@page "/managecustomer/{Id}"
+
+@* @rendermode InteractiveAuto *@
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+
+@using BlazorApp.Client.Pages.Modals
+@using BlazorApp.Models
+@inject IRepository CustomersService;
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Customer #@{
+                            if (Id != null) {
+                                <strong>@Id</strong>
+                            } 
+                        }</h3>
+                </div>
+                <div class="card-body">
+
+                    <EditForm Model="customer" OnValidSubmit="HandleSave">
+                        <div class="row">
+                            <div class="col-8">
+                                <DataAnnotationsValidator />
+                                @* <ValidationSummary /> *@
+
+                                <input type="hidden" name="customer.Id" @bind="customer.Id" />
+
+                                <div class="form-group">
+                                    <label class="form-label">Company Name</label>
+                                    <InputText @bind-Value="customer.CompanyName" class="form-control" />
+                                    <ValidationMessage For="() => customer.CompanyName" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Name</label>
+                                    <InputText @bind-Value="customer.ContactName" class="form-control" />
+                                    <ValidationMessage For="() => customer.ContactName" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Address</label>
+                                    <InputText @bind-Value="customer.Address" class="form-control" />
+                                    <ValidationMessage For="() => customer.Address" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <InputText @bind-Value="customer.City" class="form-control" />
+                                    <ValidationMessage For="() => customer.City" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Region</label>
+                                    <InputText @bind-Value="customer.Region" class="form-control" />
+                                    <ValidationMessage For="() => customer.Region" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Postal Code</label>
+                                    <InputText @bind-Value="customer.PostalCode" class="form-control" />
+                                    <ValidationMessage For="() => customer.PostalCode" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Country</label>
+                                    <InputText @bind-Value="customer.Country" class="form-control" />
+                                    <ValidationMessage For="() => customer.Country" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <InputText @bind-Value="customer.Phone" class="form-control" />
+                                    <ValidationMessage For="() => customer.Phone" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public Customer? customer { get; set; } = new();
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+            customer = await CustomersService.GetCustomerById(Id);
+    }
+
+    private async Task HandleSave()
+    {
+        if (Id is null)
+        {
+            customer.Id = Guid.NewGuid();
+
+            var res = await CustomersService.NewCustomer(customer);
+            if (res.IsSuccessStatusCode)
+                NavigationService.NavigateTo("customers");
+            else
+            {
+                ConfirmationModal confirmationModal = new()
+                {
+                    DialogMessage = "Record could be saved due to errors encountered during process.",
+                    ShowButtons = (int)ModalButtonsEnum.mbCancel
+                };
+
+                confirmationModal.ShowDialog();
+            }
+        }
+        else
+        {
+            var res = await CustomersService.UpdateCustomer(customer);
+            if (res.IsSuccessStatusCode)
+                NavigationService.NavigateTo("customers");
+        }
+    }
+}

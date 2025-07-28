@@ -1,23 +1,22 @@
 ﻿@page "/customers"
-@using BlazorApp.Components.Modals
+@using BlazorApp.Client.Pages.Modals
 @* @rendermode InteractiveAuto *@
 
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @inject IRepository CustomersService;
-@inject NavigationManager NavigationManager
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
 
-            <ConfirmationModal />
+            <ConfirmationModal @ref="confirmationModal" />
 
             <div class="card">
                 <div class="card-header">
                     <h3>Customers List</h3>
                     
-                    <button type="button" class="btn btn-info float-end">
+                    <button type="button" class="btn btn-info float-end" @onclick="() => AddNewCustomer()">
                         <i class="fas fa-plus"></i> Add New Entry
                     </button>
                     
@@ -59,8 +58,8 @@
                                             <td>@customer.Phone</td>
                                             <td>
                                                 <div class="hstack gap-1">
-                                                    <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                                                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                                    <button class="btn btn-warning" @onclick="() => HandleEdit(customer.Id)"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-danger" @onclick="() => HandleDelete(customer.Id)"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>

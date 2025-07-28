@@ -6,22 +6,22 @@
             <p>@DialogMessage</p>
             @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbYes))
             {
-                <button>Yes</button>
+                <button onclick="() => ConfirmResult(ModalButtonsEnum.mbYes)">Yes</button>
             }
 
             @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbNo))
             {
-                <button>No</button>
+                <button onclick="() => ConfirmResult(ModalButtonsEnum.mbNo)">No</button>
             }
 
             @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbDelete))
             {
-                <button>Delete</button>
+                <button onclick="() => ConfirmResult(ModalButtonsEnum.mbDelete)">Delete</button>
             }
 
             @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbCancel))
             {
-                <button>Cancel</button>
+                <button onclick="() => ConfirmResult(ModalButtonsEnum.mbCancel)">Cancel</button>
             }
         </div>
     </div>
@@ -30,12 +30,12 @@
 @code {
     [Parameter] public string DialogMessage { get; set; } = string.Empty;
     [Parameter] public int ShowButtons { get; set; } = 2 | 4;
-    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+    [Parameter] public EventCallback<ModalButtonsEnum> OnConfirm { get; set; }
     public bool Show { get; set; }
 
     public void ShowDialog() => Show = true;
 
-    async Task Confirm(bool result)
+    async Task ConfirmResult(ModalButtonsEnum result)
     {
         Show = false;
         await OnConfirm.InvokeAsync(result);
