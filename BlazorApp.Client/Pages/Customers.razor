@@ -1,0 +1,67 @@
+﻿@page "/customers"
+
+@rendermode InteractiveAuto
+@inject IRepository CustomerService;
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Customers List</div>
+                <div class="card-body">
+                    @if (CustomersList is null)
+                    {
+                        <p><em>Loading, please wait ... </em></p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name</th>
+                                        <th>Contact Name</th>
+                                        <th>Address</th>
+                                        <th>City</th>
+                                        <th>Region</th>
+                                        <th>Postal Code</th>
+                                        <th>Country</th>
+                                        <th>Phone No.</th>
+                                        <th>#Ops</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(var customer in CustomersList)
+                                    {
+                                        <tr>
+                                            <td>@customer.CompanyName</td>
+                                            <td>@customer.ContactName</td>
+                                            <td>@customer.Address</td>
+                                            <td>@customer.City</td>
+                                            <td>@customer.Region</td>
+                                            <td>@customer.PostalCode</td>
+                                            <td>@customer.Country</td>
+                                            <td>@customer.Phone</td>
+                                            <td>
+                                                <div class="hstack gap-2">
+                                                    <i class="fas fa-edit"></i>
+                                                    <i class="fas fa-times"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <p><strong>Total Entries:</strong> @CustomersList.Count.ToString("N0") </p>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
