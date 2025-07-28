@@ -1,14 +1,28 @@
 ﻿@page "/customers"
+@using BlazorApp.Components.Modals
+@* @rendermode InteractiveAuto *@
 
-@rendermode InteractiveAuto
-@inject IRepository CustomerService;
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@inject IRepository CustomersService;
 @inject NavigationManager NavigationManager
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+
+            <ConfirmationModal />
+
             <div class="card">
-                <div class="card-header">Customers List</div>
+                <div class="card-header">
+                    <h3>Customers List</h3>
+                    
+                    <button type="button" class="btn btn-info float-end">
+                        <i class="fas fa-plus"></i> Add New Entry
+                    </button>
+                    
+                </div>
+                
                 <div class="card-body">
                     @if (CustomersList is null)
                     {
@@ -44,9 +58,9 @@
                                             <td>@customer.Country</td>
                                             <td>@customer.Phone</td>
                                             <td>
-                                                <div class="hstack gap-2">
-                                                    <i class="fas fa-edit"></i>
-                                                    <i class="fas fa-times"></i>
+                                                <div class="hstack gap-1">
+                                                    <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>

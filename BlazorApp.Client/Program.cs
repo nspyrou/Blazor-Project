@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-builder.Services.AddScoped<IRepository, CustomersService>();
+builder.Services.AddSingleton<BlazorApp.Client.Services.IRepository, CustomersService>();
 
-builder.Services.AddScoped(http => new HttpClient
+builder.Services.AddSingleton(http => new HttpClient
 {
 	BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 });

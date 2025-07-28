@@ -9,9 +9,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-SQLitePCL.Batteries.Init();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=BlazorAppDB.db"));
+//builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=BlazorAppDB.db"));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped(http => new HttpClient
 {

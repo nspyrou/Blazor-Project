@@ -22,7 +22,7 @@ public class CustomersController : ControllerBase
 	[HttpGet("GetAllCustomers")]
 	public async Task<ActionResult<List<Customer>>> GetAllCustomersAsync()
 	{
-		var customers = await appDbContext.Customers.ToListAsync();
+		var customers = await appDbContext.Customers.AsNoTracking().ToListAsync();
 		return Ok(customers);
 	}
 

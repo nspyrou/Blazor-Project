@@ -9,14 +9,24 @@ namespace BlazorApp.Models;
 [ModelMetadataType(typeof(CustomerMetadata))]
 public partial class Customer
 {
+	[Key]
     public Guid? Id { get; set; } = Guid.NewGuid();
+	[Required]
+	[MaxLength(128)]
     public string? CompanyName { get; set; }
+	[MaxLength(255)]
     public string? ContactName { get; set; }
+	[MaxLength(255)]
     public string? Address { get; set; }
+	[MaxLength(128)]
     public string? City { get; set; }
+	[MaxLength(128)]
     public string? Region { get; set; }
+	[MaxLength(20)]
     public string? PostalCode { get; set; }
+	[MaxLength(128)]
     public string? Country { get; set; }
+	[MaxLength(255)]
     public string? Phone { get; set; }
 }
 

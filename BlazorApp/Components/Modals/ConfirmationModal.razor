@@ -1,0 +1,43 @@
+﻿@using BlazorApp.Models
+@if (Show)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <p>@DialogMessage</p>
+            @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbYes))
+            {
+                <button>Yes</button>
+            }
+
+            @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbNo))
+            {
+                <button>No</button>
+            }
+
+            @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbDelete))
+            {
+                <button>Delete</button>
+            }
+
+            @if (((ModalButtonsEnum)ShowButtons).HasFlag(ModalButtonsEnum.mbCancel))
+            {
+                <button>Cancel</button>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string DialogMessage { get; set; } = string.Empty;
+    [Parameter] public int ShowButtons { get; set; } = 2 | 4;
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+    public bool Show { get; set; }
+
+    public void ShowDialog() => Show = true;
+
+    async Task Confirm(bool result)
+    {
+        Show = false;
+        await OnConfirm.InvokeAsync(result);
+    }
+}
