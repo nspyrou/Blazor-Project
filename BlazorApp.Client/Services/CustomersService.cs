@@ -1,6 +1,7 @@
-﻿using BlazorApp.Models;
+﻿using BlazorApp.Client.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BlazorApp.Client.Services;
 
@@ -23,7 +24,9 @@ public class CustomersService : IRepository
 	}
 	public async Task<HttpResponseMessage> NewCustomer(Customer customer)
 	{
-		var request = await httpClient.PostAsJsonAsync("api/Customers/NewCustomer", customer);
+		var buffer = JsonSerializer.Serialize(customer);
+		var content = new StringContent(JsonSerializer.Serialize(customer), System.Text.Encoding.UTF8, "application/json");
+		var request = await httpClient.PostAsJsonAsync("api/Customers/NewCustomer", content);
 		return request;
 	}
 
@@ -35,7 +38,7 @@ public class CustomersService : IRepository
 
 	public async Task<Customer?> GetCustomerById(string id)
 	{
-		var request = await httpClient.GetAsync($"api/Customers/GetCustomerById/{id}");
+		var request = await httpClient.GetAsync($"api/Customers/GetCustomerById?id={id}");
 		var response = await request.Content.ReadFromJsonAsync<Customer>();
 		return response;
 	}

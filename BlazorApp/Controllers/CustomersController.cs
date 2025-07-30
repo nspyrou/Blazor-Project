@@ -54,7 +54,7 @@ public class CustomersController : ControllerBase
 			return BadRequest(ModelStateErrors(ModelState));
 	}
 
-	[HttpDelete("DeleteCustomer")]
+	[HttpDelete("DeleteCustomer/{id}")]
 	public async Task<ActionResult> DeleteCustomer(string id)
 	{
 		var customer = await appDbContext.Customers.FindAsync(id);

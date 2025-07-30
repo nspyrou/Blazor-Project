@@ -1,16 +1,14 @@
-﻿using BlazorApp.Client.Pages.Modals;
-using BlazorApp.Client.Services;
-using BlazorApp.Models;
+﻿using BlazorApp.Client.Services;
+using BlazorApp.Client.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace BlazorApp.Client.Pages;
 
 public partial class Customers: ComponentBase
 {
-
-	private List<Customer> CustomersList { get; set; } = null!;
-
-	ConfirmationModal confirmationModal { get; set; }
+	private List<Customer> CustomersList { get; set; } = new();
 
 	protected void AddNewCustomer() => NavigationService.NavigateTo("managecustomer");
 
@@ -25,14 +23,22 @@ public partial class Customers: ComponentBase
 		return base.OnAfterRenderAsync(firstRender);
 	}
 
-	public void HandleDelete(Guid? Id)
+	public async Task PromptDelete(Guid? Id)
 	{
 		var selCustomer = CustomersList.FirstOrDefault(x => x.Id == Id);
 		if (selCustomer != null)
 		{
-			confirmationModal.DialogMessage = $"Are you sure you want to remove [{selCustomer.CompanyName}] entry?";
-			confirmationModal.ShowButtons = (int)ModalButtonsEnum.mbYes | (int)ModalButtonsEnum.mbNo;
-			confirmationModal?.ShowDialog();
+			bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to remove [{selCustomer.CompanyName}] entry?");
+			if (confirmed)
+			{
+				var customer = CustomersList.FirstOrDefault(c => c.Id == Id);
+				if (customer != null)
+				{
+					var resp = await CustomersService.DeleteCustomer(Id.ToString());
+					if (resp.IsSuccessStatusCode)
+						CustomersList = await CustomersService.GetCustomers();
+				}
+			}
 		}
 	}
 

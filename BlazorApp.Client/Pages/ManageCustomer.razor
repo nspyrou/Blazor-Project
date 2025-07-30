@@ -5,8 +5,7 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 
-@using BlazorApp.Client.Pages.Modals
-@using BlazorApp.Models
+@using BlazorApp.Client.Models
 @inject IRepository CustomersService;
 
 <div class="container">
@@ -90,11 +89,6 @@
     [Parameter]
     public string Id { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         if (Id is not null)
@@ -112,13 +106,13 @@
                 NavigationService.NavigateTo("customers");
             else
             {
-                ConfirmationModal confirmationModal = new()
-                {
-                    DialogMessage = "Record could be saved due to errors encountered during process.",
-                    ShowButtons = (int)ModalButtonsEnum.mbCancel
-                };
+                // ConfirmationModal confirmationModal = new()
+                // {
+                //     DialogMessage = "Record could be saved due to errors encountered during process.",
+                //     ShowButtons = (int)ModalButtonsEnum.mbCancel
+                // };
 
-                confirmationModal.ShowDialog();
+                // confirmationModal.ShowDialog();
             }
         }
         else
