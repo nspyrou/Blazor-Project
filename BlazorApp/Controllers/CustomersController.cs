@@ -43,7 +43,7 @@ public class CustomersController : ControllerBase
 			{
 				appDbContext.Customers.Add(customer);
 				if (await appDbContext.SaveChangesAsync() > 0)
-					return Ok(customer);
+					return Ok();
 				else
 					return BadRequest("Failed to save new information to database, please try again.");
 			}
@@ -57,7 +57,7 @@ public class CustomersController : ControllerBase
 	[HttpDelete("DeleteCustomer/{id}")]
 	public async Task<ActionResult> DeleteCustomer(string id)
 	{
-		var customer = await appDbContext.Customers.FindAsync(id);
+		var customer = await appDbContext.Customers.FirstOrDefaultAsync(x => (x.Id.ToString() == id));
 		if (customer is not null)
 		{
 			appDbContext.Customers.Remove(customer);
@@ -80,7 +80,7 @@ public class CustomersController : ControllerBase
 			{
 				appDbContext.Update(customer);
 				if (await appDbContext.SaveChangesAsync() > 0)
-					return Ok(customer);
+					return Ok();
 				else
 					return BadRequest("Failed to update database. Please try again.");
 			}
@@ -89,6 +89,23 @@ public class CustomersController : ControllerBase
 		}
 
 		return BadRequest(ModelStateErrors(ModelState));
+	}
+
+	[HttpGet("GetCustomersWithPaging/{pageNo}/{pageEntries}")]
+	public async Task<ActionResult> GetCustomersWithPagingAsync(int pageNo = 1, int pageEntries = 10)
+	{
+		var customers = await appDbContext
+			.Customers
+			.AsNoTracking()
+			.Skip((pageNo - 1) * pageEntries)
+			.Take(pageEntries)
+			.ToListAsync();
+
+		return Ok(new PageResult<Customer>
+		{
+			Entries = customers,
+			TotalEntries = appDbContext.Customers.Count()
+		});
 	}
 
 	private List<ValidationResult> ModelStateErrors(ModelStateDictionary modelState)

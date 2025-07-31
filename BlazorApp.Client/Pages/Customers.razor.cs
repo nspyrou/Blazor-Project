@@ -9,13 +9,38 @@ namespace BlazorApp.Client.Pages;
 public partial class Customers: ComponentBase
 {
 	private List<Customer> CustomersList { get; set; } = new();
+	private int _page = 1;
+	private int _pageSize = 10;
+	private int _totalCount;
 
 	protected void AddNewCustomer() => NavigationService.NavigateTo("managecustomer");
 
 	protected override async Task OnInitializedAsync()
 	{
 		CustomersList = new();
-		CustomersList = await CustomersService.GetCustomers();
+		await LoadPagedCustomers(); // await CustomersService.GetCustomers();
+	}
+
+	private async Task LoadPagedCustomers()
+	{
+		var result = await CustomersService.GetPagedCustomers(_page, _pageSize); //.GetPagedCustomers(_page, _pageSize);
+		CustomersList = result.Entries;
+		_totalCount = result.TotalEntries;
+	}
+
+	private async Task NextPage()
+	{
+		_page++;
+		await LoadPagedCustomers();
+	}
+
+	private async Task PreviousPage()
+	{
+		if (_page > 1)
+		{
+			_page--;
+			await LoadPagedCustomers();
+		}
 	}
 
 	protected override Task OnAfterRenderAsync(bool firstRender)

@@ -12,6 +12,7 @@ public interface IRepository
 	Task<Customer?> GetCustomerById(string id);
 	Task<HttpResponseMessage> UpdateCustomer(Customer customer);
 	Task<HttpResponseMessage> DeleteCustomer(string id);
+	Task<PageResult<Customer>> GetPagedCustomers(int page, int entries);
 }
 
 public class CustomersService : IRepository
@@ -26,7 +27,7 @@ public class CustomersService : IRepository
 	{
 		var buffer = JsonSerializer.Serialize(customer);
 		var content = new StringContent(JsonSerializer.Serialize(customer), System.Text.Encoding.UTF8, "application/json");
-		var request = await httpClient.PostAsJsonAsync("api/Customers/NewCustomer", content);
+		var request = await httpClient.PostAsJsonAsync("api/Customers/NewCustomer", customer);
 		return request;
 	}
 
@@ -38,7 +39,7 @@ public class CustomersService : IRepository
 
 	public async Task<Customer?> GetCustomerById(string id)
 	{
-		var request = await httpClient.GetAsync($"api/Customers/GetCustomerById?id={id}");
+		var request = await httpClient.GetAsync($"api/Customers/GetCustomerById/{id}");
 		var response = await request.Content.ReadFromJsonAsync<Customer>();
 		return response;
 	}
@@ -54,5 +55,12 @@ public class CustomersService : IRepository
 	{
 		var request = await httpClient.DeleteAsync($"api/Customers/DeleteCustomer/{id}");
 		return request;
+	}
+
+	public async Task<PageResult<Customer>> GetPagedCustomers(int page, int entries)
+	{
+		var request = await httpClient.GetAsync($"api/Customers/GetCustomersWithPaging/{page}/{entries}");
+		var response = await request.Content.ReadFromJsonAsync<PageResult<Customer>>();
+		return response;
 	}
 }

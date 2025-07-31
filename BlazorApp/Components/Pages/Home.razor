@@ -1,7 +1,90 @@
 ﻿@page "/"
+@using BlazorApp.Data
+@inject AppDbContext dbctx
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>Blazor App <em class="text-primary">C.R.U.D.</em> Example and stuff</h2>
+        </div>
+        <div class="col-8 mt-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-info">
+                    <h4>Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-responsive-sm">
+                            <thead>
+                                <tr>
+                                    <th>Customers</th><td>@TotalCustomers.ToString("N0")</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mt-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-info">
+                    <h4>Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="col-12 text-center">
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-responsive-sm">
+                                <tr>
+                                    <td><label><strong>No Actions Defined</strong></label></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <div class="row mt-lg-5">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-info">
+                    <h4>Content</h4>
+                </div>
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-responsive-sm" style="font-size:12px">
+                                <tr>
+                                    <th><strong>BlazorApp.Models.EmployeeAndManager.cs</strong></th>
+                                    <td><p>Employee and Manager class definitions</p></td>
+                                </tr>
+                                <tr>
+                                    <th><strong>BlazorApp.Objects.IndividualExtractor.cs</strong></th>
+                                    <td><p>Employee and Manager name extraction</p></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    public int TotalCustomers { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.FromResult<bool>(false);
+
+        TotalCustomers = dbctx.Customers.Count();
+    }
+}
