@@ -1,5 +1,4 @@
 ﻿using BlazorApp.Client.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Text.Json;
 

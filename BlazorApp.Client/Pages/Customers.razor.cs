@@ -18,12 +18,12 @@ public partial class Customers: ComponentBase
 	protected override async Task OnInitializedAsync()
 	{
 		CustomersList = new();
-		await LoadPagedCustomers(); // await CustomersService.GetCustomers();
+		await LoadPagedCustomers(); 
 	}
 
 	private async Task LoadPagedCustomers()
 	{
-		var result = await CustomersService.GetPagedCustomers(_page, _pageSize); //.GetPagedCustomers(_page, _pageSize);
+		var result = await CustomersService.GetPagedCustomers(_page, _pageSize); 
 		CustomersList = result.Entries;
 		_totalCount = result.TotalEntries;
 	}

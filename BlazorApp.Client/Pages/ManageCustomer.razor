@@ -1,9 +1,7 @@
 ﻿@page "/managecustomer"
 @page "/managecustomer/{Id}"
 
-@* @rendermode InteractiveAuto *@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-
 
 @using BlazorApp.Client.Models
 @inject IRepository CustomersService;
