@@ -11,12 +11,12 @@ builder.Services.AddSingleton(http => new HttpClient
 });
 
 /* Identity Server https://github.com/DuendeSoftware/samples/blob/main/BFF/v3/BlazorWasm/Client/Program.cs */
-builder.Services
-	.AddBffBlazorClient()
-	.AddCascadingAuthenticationState();
+//builder.Services
+//	.AddBffBlazorClient()
+//	.AddCascadingAuthenticationState();
 
-builder.Services.AddLocalApiHttpClient("backend");
-builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
+//builder.Services.AddLocalApiHttpClient("backend");
+//builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("backend"));
 /***********************************/
 
 builder.Services.AddSingleton<IRepository, CustomersService>();

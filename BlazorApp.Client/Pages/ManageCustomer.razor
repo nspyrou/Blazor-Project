@@ -13,11 +13,18 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>Customer #@{
-                            if (Id != null) {
-                                <strong>@Id</strong>
-                            } 
-                        }</h3>
+                    <div class="row">
+                        <div class="col-10">
+                            <h4>Customer #@{
+                                    if (Id != null) {
+                                        <strong>@Id</strong>
+                                    } 
+                                }</h4>
+                        </div>
+                        <div class="col-2 text-success text-center">
+                            <strong><em>@pageMode</em></strong>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
 
@@ -25,7 +32,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <DataAnnotationsValidator />
-                                @* <ValidationSummary /> *@
+                                <ValidationSummary /> 
 
                                 <input type="hidden" name="customer.Id" @bind="customer.Id" />
 
@@ -85,14 +92,30 @@
 
 @code {
     public Customer? customer { get; set; } = new();
+    private ValidationMessageStore messageStore;
+    private string pageMode { get; set; } = string.Empty;
 
     [Parameter]
     public string Id { get; set; }
 
+    [CascadingParameter] 
+    private EditContext _EditContext { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _EditContext = new EditContext(customer);
+        messageStore = new ValidationMessageStore(_EditContext);
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         if (Id is not null)
+        {
+            pageMode = "Edit Mode";
             customer = await CustomersService.GetCustomerById(Id);
+        }
+        else
+            pageMode = "New Entry";
     }
 
     private async Task HandleSave()
@@ -106,13 +129,9 @@
                 NavigationService.NavigateTo("customers");
             else
             {
-                // ConfirmationModal confirmationModal = new()
-                // {
-                //     DialogMessage = "Record could be saved due to errors encountered during process.",
-                //     ShowButtons = (int)ModalButtonsEnum.mbCancel
-                // };
-
-                // confirmationModal.ShowDialog();
+                messageStore.Clear();
+                messageStore.Add(() => customer.Id, "Errors encountered while saving requested information.");
+                _EditContext.NotifyValidationStateChanged();
             }
         }
         else
